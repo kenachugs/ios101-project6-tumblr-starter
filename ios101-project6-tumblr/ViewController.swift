@@ -38,7 +38,22 @@ class ViewController: UIViewController, UITableViewDataSource {
 
         return cell
     }
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetail" { // Match your segue identifier
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let selectedPost = posts[indexPath.row]
+                let detailVC = segue.destination as! DetailViewController
+                detailVC.post = selectedPost
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // No need to manually perform segue; storyboard handles it.
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func fetchPosts() {
         let url = URL(string: "https://api.tumblr.com/v2/blog/humansofnewyork/posts/photo?api_key=1zT8CiXGXFcQDyMFG7RtcfGLwTdDjFUJnZzKJaWTmgyK4lKGYk")!
         let session = URLSession.shared.dataTask(with: url) { data, response, error in
